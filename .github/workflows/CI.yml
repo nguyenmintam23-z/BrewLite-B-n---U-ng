@@ -1,0 +1,36 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Tải mã nguồn về máy chủ ảo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Cài đặt môi trường Node.js (phiên bản 26)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: 'npm'
+
+      # 3. Cài đặt các thư viện phụ thuộc
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Chạy kiểm thử tự động (nếu có)
+      - name: Run tests
+        run: npm test --if-present
+
+      # 5. Build dự án
+      - name: Build project
+        run: npm run build --if-present
