@@ -19,7 +19,7 @@ Thanh toán trong MVP chỉ mô phỏng, không xử lý tiền thật. Sơ đ�
 
 | Vai trò | Mô tả | Quyền chính |
 |---|---|---|
-| CUSTOMER | Khách hàng tự đăng ký bằng tên hiển thị, số điện thoại và mật khẩu | Xem menu, quản lý giỏ hàng, đặt/thanh toán đơn, xem đơn của mình; tên hiển thị được hiện sau khi đăng nhập |
+| CUSTOMER | Khách hàng tự đăng ký bằng tên hiển thị, số điện thoại, mật khẩu và xác minh OTP | Xem menu, quản lý giỏ hàng, đặt/thanh toán đơn, xem đơn của mình; tên hiển thị được hiện sau khi đăng nhập |
 | STAFF | Nhân viên dùng tài khoản do quản lý cấp | Xem đơn và cập nhật trạng thái xử lý |
 | MANAGER | Quản lý dùng tài khoản quản lý được cấp | Các quyền quản lý đồ uống, nhân viên và báo cáo; có thể xử lý đơn |
 
@@ -34,7 +34,7 @@ Thanh toán trong MVP chỉ mô phỏng, không xử lý tiền thật. Sơ đ�
 | FR-05 | Khách có thể thêm một món đã chọn tùy chọn vào giỏ hàng. | Must | Món được thêm với đúng tùy chọn, số lượng và đơn giá; tổng tiền giỏ tăng đúng bằng thành tiền của món. |
 | FR-06 | Khách có thể xem các món và tổng tiền trong giỏ hàng. | Must | Nội dung giỏ và tổng tiền hiển thị khớp với các món, số lượng, tùy chọn và giá hiện hành. |
 | FR-07 | Khách có thể sửa số lượng hoặc xóa món khỏi giỏ hàng. | Must | Số lượng và tổng tiền thay đổi đúng sau khi sửa; sau khi xóa, món không còn trong giỏ và tổng tiền được tính lại. |
-| FR-08 | Khách có thể tự đăng ký tài khoản bằng tên hiển thị, số điện thoại và mật khẩu hợp lệ; sau khi đăng nhập thành công, hệ thống hiển thị tên hiển thị của khách. | Must | Đăng ký hợp lệ tạo tài khoản `CUSTOMER` và lưu tên hiển thị; số điện thoại đã dùng hoặc dữ liệu không hợp lệ bị từ chối và không tạo tài khoản trùng. Khi khách đăng nhập thành công, giao diện hiển thị đúng tên hiển thị đã đăng ký. |
+| FR-08 | Khách có thể đăng ký bằng tên hiển thị, số điện thoại và mật khẩu hợp lệ, sau đó xác minh số điện thoại bằng OTP 6 chữ số; sau khi đăng nhập thành công, hệ thống hiển thị tên hiển thị của khách. | Must | Hệ thống tạo OTP 6 chữ số cho yêu cầu đăng ký. Trong môi trường phát triển/kiểm thử, mã được hiển thị trong terminal để người kiểm thử nhập xác minh; hệ thống không gửi SMS thật. Chỉ sau khi OTP hợp lệ, tài khoản `CUSTOMER` mới được tạo và lưu tên hiển thị. Số điện thoại đã đăng ký, OTP không hợp lệ/hết hạn hoặc dữ liệu không hợp lệ bị từ chối. Khi đăng nhập thành công, giao diện hiển thị đúng tên đã đăng ký. |
 | FR-09 | Khách hàng, nhân viên và quản lý có thể đăng nhập bằng thông tin tài khoản hợp lệ. | Must | Khách hàng đăng nhập bằng số điện thoại và mật khẩu; nhân viên/quản lý dùng thông tin tài khoản được cấp. Đăng nhập thành công trả token và đúng vai trò; sai thông tin đăng nhập trả lỗi xác thực và không cấp token. |
 | FR-10 | Hệ thống giới hạn chức năng theo vai trò `CUSTOMER`, `STAFF` và `MANAGER`. | Must | `STAFF` gọi API quản lý nhân viên/báo cáo nhận `403`; `CUSTOMER` gọi API nội bộ nhận `403`; `MANAGER` gọi được API quản trị được cấp. Yêu cầu không có token nhận `401`. |
 | FR-11 | Khách đã đăng nhập có thể tạo đơn từ giỏ hàng hợp lệ; backend tự tính tổng tiền. | Must | Đơn được lưu với đúng chủ sở hữu, món, tùy chọn, số lượng và tổng tiền tính ở backend; giỏ rỗng hoặc dữ liệu sai bị từ chối. |
@@ -58,7 +58,7 @@ Thanh toán trong MVP chỉ mô phỏng, không xử lý tiền thật. Sơ đ�
 | NFR-02 | Mật khẩu được lưu dưới dạng hash an toàn, không lưu dạng văn bản thuần. | Must | Sau khi đăng ký, database chỉ chứa password hash; mật khẩu gốc không xuất hiện trong database hoặc log. |
 | NFR-03 | API được bảo vệ xác thực token và kiểm tra quyền ở backend. | Must | Thiếu/sai token nhận `401`; token hợp lệ nhưng sai vai trò nhận `403`; vai trò được phép gọi API thành công. |
 | NFR-04 | Dữ liệu đầu vào được validate ở backend và lỗi trả theo định dạng nhất quán. | Must | Dữ liệu thiếu trường, sai kiểu hoặc ngoài giới hạn nhận lỗi `4xx`; không ghi dữ liệu không hợp lệ vào database. |
-| NFR-05 | Số điện thoại và thông tin bí mật được bảo vệ. | Must | Số điện thoại không xuất hiện trong log không cần thiết; JWT secret và credential chỉ lấy từ biến môi trường, không có trong repository hoặc log CI. |
+| NFR-05 | Số điện thoại và thông tin bí mật được bảo vệ. | Must | OTP chỉ được in trong terminal của môi trường phát triển/kiểm thử để xác minh đăng ký; production không ghi OTP hoặc mật khẩu vào log. JWT secret và credential chỉ lấy từ biến môi trường, không có trong repository hoặc log CI. |
 | NFR-06 | Dịch vụ API duy trì khả dụng trong phiên demo và báo đúng trạng thái sức khỏe. | Should | Trong phiên kiểm tra 30 phút, health check mỗi phút thành công ít nhất 29/30 lần; khi API hoặc database không sẵn sàng, health endpoint báo unhealthy hoặc trả mã lỗi phù hợp. |
 | NFR-07 | Giao diện mobile-first sử dụng được trên màn hình điện thoại và máy tính. | Should | Các luồng xem menu, giỏ hàng và checkout không tràn ngang hoặc mất nút thao tác ở viewport 360×800 và 1280×720. |
 | NFR-08 | Thành viên có thể dựng lại môi trường local từ repository. | Must | Làm theo README, `.env.example` và `docker-compose.yml` có thể khởi chạy web, API và PostgreSQL; migration/seed hoàn tất và `GET /health` trả `200`. |
@@ -72,7 +72,7 @@ Sơ đồ tổng quát thể hiện các actor `CUSTOMER`, `STAFF`, `MANAGER`, d
 ## 7. Quy tắc và giả định nghiệp vụ dùng trong SRS
 
 - Khách có thể xem menu mà không đăng nhập; cần đăng nhập để đặt đơn và xem dữ liệu đơn cá nhân.
-- Đăng ký khách hàng dùng tên hiển thị, số điện thoại và mật khẩu; sau đăng nhập, giao diện hiển thị tên đã đăng ký. Xác minh SMS/OTP chưa nằm trong MVP.
+- Đăng ký khách hàng dùng tên hiển thị, số điện thoại và mật khẩu, sau đó xác minh OTP 6 chữ số. Trong môi trường phát triển/kiểm thử, hệ thống tạo OTP và hiển thị mã trong terminal để kiểm thử quy trình đăng ký; không gửi SMS thật. Sau đăng nhập, giao diện hiển thị tên đã đăng ký.
 - Nhân viên và quản lý không tự đăng ký; tài khoản nội bộ do quản lý tạo hoặc seed sẵn.
 - Thanh toán chỉ mô phỏng Ví/Thẻ. Khi thanh toán thất bại, đơn giữ `PENDING_PAYMENT` để khách thử lại; cùng idempotency key trả cùng kết quả, lần thử mới dùng key mới.
 - Đơn và phần tồn kho được giữ phải ghi nhất quán trong transaction. Khi nhân viên hủy đơn chưa chuẩn bị, phần tồn kho đã giữ được hoàn lại.

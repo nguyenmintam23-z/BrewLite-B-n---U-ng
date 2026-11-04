@@ -77,7 +77,7 @@
 ### Quy tắc và giới hạn phạm vi
 
 - Thanh toán của MVP chỉ là mô phỏng Ví/Thẻ; không chuyển tiền thật và không thu thập/lưu số thẻ hoặc CVV.
-- Khách phải đăng nhập để đặt đơn; khách chưa có tài khoản cần đăng ký bằng tên hiển thị, số điện thoại và mật khẩu. Sau khi đăng nhập thành công, giao diện hiển thị tên hiển thị đã đăng ký. SMS/OTP chưa thuộc MVP.
+- Khách phải đăng nhập để đặt đơn; khách chưa có tài khoản đăng ký bằng tên hiển thị, số điện thoại và mật khẩu, rồi xác minh OTP 6 chữ số. Trong môi trường phát triển/kiểm thử, hệ thống tạo mã OTP và hiển thị mã trong terminal để kiểm thử quy trình đăng ký; không gửi SMS thật. Sau khi đăng nhập thành công, giao diện hiển thị tên hiển thị đã đăng ký.
 - Nhân viên và quản lý không tham gia luồng checkout này; họ dùng tài khoản nội bộ do quản lý cấp.
 - Use case kết thúc khi hệ thống trả kết quả tạo đơn/thanh toán. Chuẩn bị món, giao hàng và xử lý hoàn tiền không thuộc luồng này.
 
